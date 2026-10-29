@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<!-- RF 3.2 Catálogo de peritos (bocetos CatalogoPeritos.png y VerPeritos.png) -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{peritajes/fragmentos :: head('Catálogo de peritos')}"></head>
+<body class="per-body">
+<div class="per-app">
+    <aside th:replace="~{peritajes/fragmentos :: menu('peritos')}"></aside>
+
+    <div class="per-contenido">
+        <header th:replace="~{peritajes/fragmentos :: encabezado}"></header>
+
+        <main class="per-main">
+            <div class="d-flex justify-content-between per-migas">
+                <span>SGPJ / Catálogo de peritos</span>
+                <span th:text="${fechaHoraActual}"></span>
+            </div>
+
+            <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
+                <div>
+                    <h1 class="per-titulo">Catálogo de peritos</h1>
+                    <p class="per-descripcion">Padrón institucional, especialidades y disponibilidad para asignación.</p>
+                </div>
+                <a class="btn btn-per mt-3" th:href="@{/peritajes/peritos/nuevo}">+ Registrar perito</a>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="per-contador">&bull; <span th:text="${totalRegistrados}">0</span> Registrados</span>
+                <span class="per-contador">&bull; <span th:text="${totalActivos}">0</span> Activos</span>
+                <span class="per-contador">&bull; <span th:text="${totalInactivos}">0</span> Inactivos</span>
+            </div>
+
+            <!-- Filtros: al cambiar una lista se aplica; el texto se aplica con Enter -->
+            <form class="row g-2 mb-2" method="get" th:action="@{/peritajes/peritos}">
+                <input type="hidden" name="size" th:value="${size}">
+                <div class="col-lg-4 col-md-6">
+                    <div class="input-group">
+                        <button type="submit" class="btn btn-outline-secondary bg-white" aria-label="Buscar">
+                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
+                        </button>
+                        <input type="search" class="form-control" name="q" th:value="${q}"
+                               placeholder="Buscar por nombre o número de registro" aria-label="Buscar">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <select class="form-select" name="especialidad" aria-label="Especialidad" data-autoenvio>
+                        <option value="">Especialidad: Todas</option>
+                        <option th:each="e : ${especialidades}" th:value="${e}" th:text="${e}"
+                                th:selected="${e == especialidad}"></option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <select class="form-select" name="materiaId" aria-label="Materia" data-autoenvio>
+                        <option value="">Materia: Todas</option>
+                        <option th:each="m : ${materias}" th:value="${m.id}" th:text="${m.nombre}"
+                                th:selected="${m.id == materiaId}"></option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <select class="form-select" name="estado" aria-label="Estado" data-autoenvio>
+                        <option value="">Estado: Todos</option>
+                        <option value="activo" th:selected="${estado == 'activo'}">Activo</option>
+                        <option value="inactivo" th:selected="${estado == 'inactivo'}">Inactivo</option>
+                    </select>
+                </div>
+            </form>
+
+            <div class="per-texto-chico mb-3" th:if="${hayFiltros}">
+                Filtros aplicados · <span th:text="${pagina.totalElements}"></span>
+                <span th:text="${pagina.totalElements == 1} ? 'resultado coincidente' : 'resultados coincidentes'"></span>
+                · <a th:href="@{/peritajes/peritos}">Quitar filtros</a>
+            </div>
+
+            <div class="per-tarjeta">
+                <div th:if="${pagina.empty}" class="p-4 text-center per-descripcion"
+                     th:text="${totalRegistrados == 0} ? 'Aún no hay peritos registrados.' : 'No se encontraron peritos'">
+                </div>
+
+                <div th:unless="${pagina.empty}" class="table-responsive">
+                    <table class="table per-tabla align-middle mb-0">
+                        <thead>
+                        <tr>
+                            <th>Perito / Registro</th>
+                            <th>Materias</th>
+                            <th>Estado</th>
+                            <th>Carga activa</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="p : ${pagina.content}">
+                            <td>
+                                <div class="fw-semibold" th:text="${p.nombreCompleto}"></div>
+                                <div class="per-texto-chico" th:text="${p.numeroRegistro}"></div>
+                            </td>
+                            <td th:text="${materiasPorPerito[p.id]}"></td>
+                            <td>
+                                <span th:if="${p.activo}" class="per-estado">Activo</span>
+                                <span th:unless="${p.activo}" class="per-estado per-estado-inactivo">Inactivo</span>
+                            </td>
+                            <td th:with="c=${cargaPorPerito[p.id]}">
+                                <div class="fw-semibold fs-5" th:text="${c.total()}"></div>
+                                <div class="per-texto-chico" th:text="${c.asignados()} + ' Asig. · ' + ${c.enProceso()} + ' Proc.'"></div>
+                            </td>
+                            <td class="text-end">
+                                <a class="btn btn-sm btn-outline-secondary" title="Editar"
+                                   th:href="@{/peritajes/peritos/{id}/editar(id=${p.id})}"
+                                   th:attr="aria-label='Editar a ' + ${p.nombreCompleto}">
+                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 2.5l2.5 2.5L5 13.5H2.5V11z"/></svg>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Paginación (25 por página); conserva los filtros -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3" th:unless="${pagina.empty}">
+                <!-- RF 3.2: el administrador puede cambiar el número de registros por página -->
+                <form class="d-flex align-items-center gap-2" method="get" th:action="@{/peritajes/peritos}">
+                    <input type="hidden" name="q" th:value="${q}">
+                    <input type="hidden" name="especialidad" th:value="${especialidad}">
+                    <input type="hidden" name="materiaId" th:value="${materiaId}">
+                    <input type="hidden" name="estado" th:value="${estado}">
+                    <label for="size" class="per-texto-chico text-nowrap">Registros por página</label>
+                    <select id="size" name="size" class="form-select form-select-sm" style="width: auto;" data-autoenvio>
+                        <option th:each="t : ${tamanosPagina}" th:value="${t}" th:text="${t}" th:selected="${t == size}"></option>
+                    </select>
+                </form>
+                <span class="per-texto-chico">
+                    Mostrando <span th:text="${pagina.number * pagina.size + 1}"></span>–<span
+                        th:text="${pagina.number * pagina.size + pagina.numberOfElements}"></span>
+                    de <span th:text="${pagina.totalElements}"></span> registros
+                </span>
+                <nav aria-label="Páginas">
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item" th:classappend="${pagina.first} ? 'disabled'">
+                            <a class="page-link" th:href="@{/peritajes/peritos(page=${pagina.number - 1}, q=${q}, especialidad=${especialidad}, materiaId=${materiaId}, estado=${estado}, size=${size})}">Anterior</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, pagina.totalPages - 1)}"
+                            th:classappend="${i == pagina.number} ? 'active'">
+                            <a class="page-link" th:text="${i + 1}"
+                               th:href="@{/peritajes/peritos(page=${i}, q=${q}, especialidad=${especialidad}, materiaId=${materiaId}, estado=${estado}, size=${size})}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${pagina.last} ? 'disabled'">
+                            <a class="page-link" th:href="@{/peritajes/peritos(page=${pagina.number + 1}, q=${q}, especialidad=${especialidad}, materiaId=${materiaId}, estado=${estado}, size=${size})}">Siguiente</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </main>
+
+        <footer th:replace="~{peritajes/fragmentos :: pie}"></footer>
+    </div>
+</div>
+
+<div th:replace="~{peritajes/fragmentos :: aviso}"></div>
+<th:block th:replace="~{peritajes/fragmentos :: scripts}"></th:block>
+</body>
+</html>
