@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!-- RF 3.3 Edición y RF 3.4 Baja/reactivación de perito (boceto EditarPeritos.png) -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{peritajes/fragmentos :: head('Editar perito')}"></head>
+<body class="per-body">
+<div class="per-app">
+    <aside th:replace="~{peritajes/fragmentos :: menu('peritos')}"></aside>
+
+    <div class="per-contenido">
+        <header th:replace="~{peritajes/fragmentos :: encabezado}"></header>
+
+        <main class="per-main">
+            <div class="d-flex justify-content-between per-migas">
+                <span>SGPJ / <a th:href="@{/peritajes/peritos}">Catálogo de peritos</a> / Editar perito</span>
+                <span th:text="${fechaHoraActual}"></span>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h1 class="per-titulo">Editar perito</h1>
+                    <p class="per-descripcion" th:text="${perito.nombreCompleto} + ' · Registro ' + ${perito.numeroRegistro}"></p>
+                </div>
+                <span th:if="${perito.activo}" class="per-estado mt-3">Activo</span>
+                <span th:unless="${perito.activo}" class="per-estado per-estado-inactivo mt-3">Inactivo</span>
+            </div>
+
+            <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
+            <div class="row g-3">
+                <div class="col-lg-8">
+
+                    <!-- Datos del perito. Los botones de guardar están al final de la página (atributo form) -->
+                    <form id="formDatos" method="post" novalidate th:object="${peritoForm}"
+                          th:action="@{/peritajes/peritos/{id}/editar(id=${perito.id})}">
+                        <section class="per-tarjeta p-4 mb-3">
+                            <h2 class="per-tarjeta-titulo mb-3">Datos del perito</h2>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="nombre" class="form-label">Nombre(s) *</label>
+                                    <input type="text" id="nombre" class="form-control" th:field="*{nombre}" maxlength="80"
+                                           th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid'">
+                                    <div class="invalid-feedback" th:errors="*{nombre}"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="apellidoPaterno" class="form-label">Apellido paterno *</label>
+                                    <input type="text" id="apellidoPaterno" class="form-control" th:field="*{apellidoPaterno}" maxlength="60"
+                                           th:classappend="${#fields.hasErrors('apellidoPaterno')} ? 'is-invalid'">
+                                    <div class="invalid-feedback" th:errors="*{apellidoPaterno}"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="apellidoMaterno" class="form-label">Apellido materno</label>
+                                    <input type="text" id="apellidoMaterno" class="form-control" th:field="*{apellidoMaterno}" maxlength="60"
+                                           th:classappend="${#fields.hasErrors('apellidoMaterno')} ? 'is-invalid'">
+                                    <div class="invalid-feedback" th:errors="*{apellidoMaterno}"></div>
+                                </div>
+
+                                <!-- Correo y número de registro: fijos (el service no los cambia) -->
+                                <div class="col-md-7">
+                                    <label for="correo" class="form-label">Correo institucional</label>
+                                    <input type="email" id="correo" class="form-control" th:field="*{correo}" readonly>
+                                </div>
+                                <div class="col-md-5">
+                                    <label for="numeroRegistro" class="form-label">Número de registro</label>
+                                    <input type="text" id="numeroRegistro" class="form-control" th:field="*{numeroRegistro}" readonly>
+                                </div>
+
+                                <div class="col-md-7">
+                                    <label for="telefono" class="form-label">Teléfono de contacto *</label>
+                                    <input type="tel" id="telefono" class="form-control" th:field="*{telefono}" data-telefono maxlength="14"
+                                           th:classappend="${#fields.hasErrors('telefono')} ? 'is-invalid'">
+                                    <div class="invalid-feedback" th:errors="*{telefono}"></div>
+                                </div>
+                                <!-- Especialidades en texto libre: una o varias (RF 3.1 y 3.3) -->
+                                <div class="col-12">
+                                    <label class="form-label" for="especialidad0">Especialidades *</label>
+                                    <div data-especialidades>
+                                        <div class="input-group mb-2 per-especialidad" th:each="esp, st : *{especialidades}">
+                                            <input type="text" class="form-control" maxlength="100"
+                                                   th:id="|especialidad${st.index}|" th:name="|especialidades[${st.index}]|" th:value="${esp}"
+                                                   th:classappend="${#fields.hasErrors('especialidadCapturada')} ? 'is-invalid'"
+                                                   placeholder="Área o estudios del perito, por ejemplo: Psicología forense">
+                                            <button type="button" class="btn btn-outline-secondary bg-white" data-quitar-especialidad
+                                                    title="Quitar especialidad" aria-label="Quitar especialidad">&times;</button>
+                                        </div>
+                                    </div>
+                                    <div class="text-danger small mb-1" th:if="${#fields.hasErrors('especialidadCapturada')}"
+                                         th:errors="*{especialidadCapturada}"></div>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary bg-white" data-agregar-especialidad>+ Agregar otra especialidad</button>
+                                </div>
+
+                                <fieldset class="col-12">
+                                    <legend class="form-label fs-6">Materias *</legend>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <span class="per-opcion" th:each="m : ${materias}">
+                                            <input type="checkbox" class="btn-check per-materia" autocomplete="off"
+                                                   th:field="*{materiasIds}" th:value="${m.id}">
+                                            <label class="btn btn-sm" th:for="${#ids.prev('materiasIds')}" th:text="${m.nombre}"></label>
+                                        </span>
+                                    </div>
+                                    <div class="text-danger small mt-1" th:if="${#fields.hasErrors('materiasIds')}" th:errors="*{materiasIds}"></div>
+                                    <div class="form-text"><span data-contador-materias></span>
+                                        Cambiar las materias no afecta los peritajes ya asignados.</div>
+                                </fieldset>
+                            </div>
+                        </section>
+                    </form>
+
+                    <!-- RF 3.4 Estado en el padrón (formulario aparte) -->
+                    <form method="post" th:action="@{/peritajes/peritos/{id}/estado(id=${perito.id})}"
+                          data-formulario-estado th:data-estado-actual="${perito.activo}" th:data-nombre="${perito.nombreCompleto}">
+                        <section class="per-tarjeta p-4 mb-3">
+                            <h2 class="per-tarjeta-titulo mb-3">Estado en el padrón</h2>
+
+                            <div class="btn-group d-flex mb-3" style="max-width: 220px;" role="group" aria-label="Estado del perito">
+                                <input type="radio" class="btn-check per-segmento" name="activo" id="estadoActivo"
+                                       value="true" th:checked="${perito.activo}">
+                                <label class="btn btn-sm px-3" for="estadoActivo">Activo</label>
+                                <input type="radio" class="btn-check per-segmento" name="activo" id="estadoInactivo"
+                                       value="false" th:checked="${!perito.activo}">
+                                <label class="btn btn-sm px-3" for="estadoInactivo">Inactivo</label>
+                            </div>
+
+                            <!-- Aviso si tiene carga activa: no se puede desactivar -->
+                            <div class="per-aviso per-aviso-advertencia p-3 mb-2" th:if="${perito.activo and carga.total() > 0}">
+                                <div class="fw-semibold">&#9432; No es posible desactivar al perito</div>
+                                Tiene <span th:text="${carga.total()}"></span> peritajes con carga activa:
+                                <span th:text="${carga.asignados()}"></span> Asignado y
+                                <span th:text="${carga.enProceso()}"></span> En Proceso.
+                                Deben concluirse o ser reasignados por un usuario autorizado antes de cambiar a Inactivo.
+                            </div>
+
+                            <!-- Resultado de un intento fallido de baja -->
+                            <div th:if="${errorEstado}" class="per-texto-chico mb-2">
+                                <span class="text-danger" th:text="${errorEstado}"></span><br>
+                                El cambio a Inactivo no se aplicó.
+                                <span th:text="${perito.nombreCompleto}"></span> conserva el estado Activo.
+                            </div>
+
+                            <!-- peritos.js pide confirmación y solo lo activa si se eligió otro estado -->
+                            <button type="submit" class="btn btn-outline-secondary bg-white" data-aplicar-estado>
+                                Aplicar cambio de estado
+                            </button>
+                        </section>
+                    </form>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a class="btn btn-outline-secondary bg-white" th:href="@{/peritajes/peritos}">Cancelar</a>
+                        <button type="submit" form="formDatos" class="btn btn-per">Guardar datos del perito</button>
+                    </div>
+                </div>
+
+                <!-- Carga activa: peritajes Asignados y En Proceso -->
+                <div class="col-lg-4">
+                    <section class="per-tarjeta p-4">
+                        <h2 class="per-tarjeta-titulo mb-3">Carga activa: <span th:text="${carga.total()}"></span></h2>
+
+                        <table class="table per-tabla table-bordered mb-2" th:unless="${#lists.isEmpty(peritajesActivos)}">
+                            <thead>
+                            <tr>
+                                <th>Folio</th>
+                                <th>Estado</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="pa : ${peritajesActivos}">
+                                <td class="fw-semibold" th:text="${pa.folio()}"></td>
+                                <td>
+                                    <span class="per-estado" th:classappend="${pa.estado() == 'Asignado'} ? 'per-estado-asignado'"
+                                          th:text="${pa.estado()}"></span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <p class="per-descripcion" th:if="${#lists.isEmpty(peritajesActivos)}">
+                            Sin peritajes Asignados ni En Proceso.
+                        </p>
+
+                        <div class="per-texto-chico">Los dictámenes Entregados no forman parte de la carga activa.</div>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <footer th:replace="~{peritajes/fragmentos :: pie}"></footer>
+    </div>
+</div>
+
+<div th:replace="~{peritajes/fragmentos :: aviso}"></div>
+<th:block th:replace="~{peritajes/fragmentos :: scripts}"></th:block>
+</body>
+</html>
