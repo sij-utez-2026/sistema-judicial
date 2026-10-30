@@ -1,0 +1,323 @@
+/*
+ * Estilos del módulo de Peritajes (bocetos de Docs/figma).
+ * Se apoya en Bootstrap 5; aquí solo van colores y detalles del diseño.
+ */
+:root {
+    --per-verde: #1f3a2c;          /* menú lateral y botones principales */
+    --per-verde-hover: #2b4d3b;
+    --per-verde-claro: #e8efe9;
+    --per-dorado: #c9a54a;         /* acentos */
+    --per-fondo: #f5f3ec;          /* fondo crema */
+    --per-borde: #e3e0d6;
+    --per-texto-suave: #6b6b63;
+}
+
+body.per-body {
+    background: var(--per-fondo);
+    color: #1d1d1b;
+    font-size: .95rem;
+}
+
+/* ---------- Estructura: menú lateral + contenido ---------- */
+.per-app {
+    display: flex;
+    min-height: 100vh;
+}
+
+.per-sidebar {
+    /* !important: en pantallas grandes Bootstrap deja el offcanvas transparente */
+    background: var(--per-verde) !important;
+    color: #e9eee9;
+    width: 250px;
+    flex-shrink: 0;
+}
+
+@media (min-width: 992px) {
+    .per-sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+    }
+}
+
+.per-sidebar .offcanvas-body {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 1rem;
+    height: 100%;
+}
+
+.per-emblema {
+    background: #f7f3e6;
+    color: #3b3b35;
+    border-radius: .5rem;
+    font-size: .75rem;
+    font-weight: 600;
+    text-align: center;
+    padding: .9rem .5rem;
+}
+
+.per-linea-dorada {
+    width: 2rem;
+    height: 3px;
+    background: var(--per-dorado);
+    margin: 1rem 0 .75rem;
+}
+
+.per-institucion {
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.per-subtitulo-dorado {
+    color: var(--per-dorado);
+    font-size: .72rem;
+}
+
+.per-etiqueta-menu {
+    font-size: .68rem;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: #a9b7ad;
+    margin: 1.5rem 0 .5rem;
+}
+
+.per-menu .nav-link {
+    color: #e9eee9;
+    border-radius: .4rem;
+    padding: .55rem .75rem;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.per-menu .nav-link:hover {
+    background: var(--per-verde-hover);
+}
+
+.per-menu .nav-link.active {
+    background: var(--per-verde-hover);
+    border-left: 3px solid var(--per-dorado);
+}
+
+.per-menu .nav-link.disabled {
+    color: #9fb0a5;
+}
+
+.per-usuario {
+    margin-top: auto;
+    font-size: .8rem;
+}
+
+.per-avatar {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: #f7f3e6;
+    color: var(--per-verde);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.per-btn-salir {
+    border: 1px solid var(--per-dorado);
+    color: #e9eee9;
+}
+
+.per-contenido {
+    flex-grow: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.per-topbar {
+    background: #fff;
+    border-bottom: 1px solid var(--per-borde);
+    padding: .9rem 1.5rem;
+    color: var(--per-texto-suave);
+    font-size: .85rem;
+}
+
+.per-main {
+    padding: 1.25rem 1.5rem 2rem;
+    flex-grow: 1;
+}
+
+.per-migas {
+    font-size: .78rem;
+    color: var(--per-texto-suave);
+}
+
+.per-migas a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.per-titulo {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 1rem 0 .2rem;
+}
+
+.per-descripcion {
+    color: var(--per-texto-suave);
+    font-size: .85rem;
+}
+
+.per-pie {
+    font-size: .75rem;
+    color: var(--per-texto-suave);
+    padding: 0 1.5rem 1.25rem;
+}
+
+/* ---------- Componentes ---------- */
+.btn-per {
+    background: var(--per-verde);
+    border-color: var(--per-verde);
+    color: #fff;
+}
+
+.btn-per:hover,
+.btn-per:focus {
+    background: var(--per-verde-hover);
+    border-color: var(--per-verde-hover);
+    color: #fff;
+}
+
+.per-tarjeta {
+    background: #fff;
+    border: 1px solid var(--per-borde);
+    border-radius: .6rem;
+}
+
+.per-tarjeta-titulo {
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+/* Contadores: "16 registrados" */
+.per-contador {
+    background: #fff;
+    border: 1px solid var(--per-borde);
+    border-radius: .35rem;
+    font-size: .75rem;
+    font-weight: 600;
+    padding: .2rem .55rem;
+}
+
+/* Estado con punto: Activo / Inactivo / En Proceso / Asignado */
+.per-estado {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    background: #f4efdf;
+    border-radius: .3rem;
+    font-size: .75rem;
+    font-weight: 600;
+    padding: .15rem .5rem;
+}
+
+.per-estado::before {
+    content: "";
+    width: .45rem;
+    height: .45rem;
+    border-radius: 50%;
+    background: #2e7d4f;
+}
+
+.per-estado-inactivo::before {
+    background: #8a8a80;
+}
+
+.per-estado-asignado::before {
+    background: #d08a2c;
+}
+
+/* Tabla del catálogo */
+.per-tabla thead th {
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--per-texto-suave);
+    font-weight: 600;
+    background: #faf9f5;
+}
+
+.per-tabla td {
+    padding-top: .85rem;
+    padding-bottom: .85rem;
+}
+
+.per-texto-chico {
+    font-size: .75rem;
+    color: var(--per-texto-suave);
+}
+
+/*
+ * Materias como botones seleccionables: ☐ Civil  ✓ Familiar
+ * Cada casilla va dentro de un <span class="per-opcion"> porque Thymeleaf agrega un input oculto
+ * entre la casilla y su etiqueta; por eso se usa "~" y no "+".
+ */
+.per-opcion .btn {
+    border-color: var(--per-borde);
+    background: #fff;
+    color: #1d1d1b;
+}
+
+.per-opcion .btn::before {
+    content: "\2610  ";
+}
+
+.per-opcion .per-materia:checked ~ .btn {
+    background: var(--per-verde);
+    border-color: var(--per-verde);
+    color: #fff;
+}
+
+.per-opcion .per-materia:checked ~ .btn::before {
+    content: "\2713  ";
+}
+
+.per-opcion .per-materia:focus-visible ~ .btn {
+    box-shadow: 0 0 0 .2rem rgba(31, 58, 44, .25);
+}
+
+/* Activo / Inactivo en la edición */
+.per-segmento + .btn {
+    border-color: var(--per-borde);
+    background: #fff;
+}
+
+.per-segmento:checked + .btn {
+    background: var(--per-verde);
+    border-color: var(--per-verde);
+    color: #fff;
+}
+
+/* Paginación en verde */
+.pagination {
+    --bs-pagination-color: var(--per-verde);
+    --bs-pagination-hover-color: var(--per-verde);
+    --bs-pagination-active-bg: var(--per-verde);
+    --bs-pagination-active-border-color: var(--per-verde);
+}
+
+/* Avisos */
+.per-aviso {
+    background: #fff;
+    border: 1px solid var(--per-borde);
+    border-radius: .6rem;
+    font-size: .85rem;
+}
+
+.per-aviso-advertencia {
+    background: #fdf6ea;
+    border-color: #e0b56a;
+}
+
+.form-control[readonly] {
+    background: #f3f2ee;
+}
