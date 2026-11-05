@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!-- RF 3.1 Registro de perito (boceto RegistroPeritos.png) -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{peritajes/fragmentos :: head('Registrar perito')}"></head>
+<body class="per-body">
+<div class="per-app">
+    <aside th:replace="~{peritajes/fragmentos :: menu('peritos')}"></aside>
+
+    <div class="per-contenido">
+        <header th:replace="~{peritajes/fragmentos :: encabezado}"></header>
+
+        <main class="per-main">
+            <div class="d-flex justify-content-between per-migas">
+                <span>SGPJ / <a th:href="@{/peritajes/peritos}">Catálogo de peritos</a> / Registrar perito</span>
+                <span th:text="${fechaHoraActual}"></span>
+            </div>
+
+            <h1 class="per-titulo">Registrar perito</h1>
+            <p class="per-descripcion">Capture los datos del padrón. Los campos con * son obligatorios.</p>
+
+            <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
+            <form method="post" novalidate th:action="@{/peritajes/peritos/nuevo}" th:object="${peritoForm}">
+
+                <section class="per-tarjeta p-4 mb-3">
+                    <h2 class="per-tarjeta-titulo mb-3">Datos de identificación</h2>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="nombre" class="form-label">Nombre(s) *</label>
+                            <input type="text" id="nombre" class="form-control" th:field="*{nombre}" maxlength="80"
+                                   th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{nombre}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="apellidoPaterno" class="form-label">Apellido paterno *</label>
+                            <input type="text" id="apellidoPaterno" class="form-control" th:field="*{apellidoPaterno}" maxlength="60"
+                                   th:classappend="${#fields.hasErrors('apellidoPaterno')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{apellidoPaterno}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="apellidoMaterno" class="form-label">Apellido materno</label>
+                            <input type="text" id="apellidoMaterno" class="form-control" th:field="*{apellidoMaterno}" maxlength="60"
+                                   th:classappend="${#fields.hasErrors('apellidoMaterno')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{apellidoMaterno}"></div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="correo" class="form-label">Correo institucional *</label>
+                            <input type="email" id="correo" class="form-control" th:field="*{correo}" maxlength="150"
+                                   th:classappend="${#fields.hasErrors('correo')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{correo}"></div>
+                            <div class="form-text">No se podrá cambiar después del registro.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="telefono" class="form-label">Teléfono de contacto *</label>
+                            <input type="tel" id="telefono" class="form-control" th:field="*{telefono}" data-telefono maxlength="14"
+                                   placeholder="777 000 0000"
+                                   th:classappend="${#fields.hasErrors('telefono')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{telefono}"></div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="numeroRegistro" class="form-label">Número de registro *</label>
+                            <input type="text" id="numeroRegistro" class="form-control" th:field="*{numeroRegistro}" maxlength="8" data-mayusculas
+                                   placeholder="PER-0000"
+                                   th:classappend="${#fields.hasErrors('numeroRegistro')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{numeroRegistro}"></div>
+                            <div class="form-text">Identificador único dentro del padrón de peritos. No se podrá cambiar después del registro.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="per-tarjeta p-4 mb-3">
+                    <h2 class="per-tarjeta-titulo mb-3">Perfil pericial</h2>
+
+                    <!-- Especialidades en texto libre: una o varias (RF 3.1 y 3.3) -->
+                    <div class="mb-3">
+                        <label class="form-label" for="especialidad0">Especialidades *</label>
+                        <div data-especialidades>
+                            <div class="input-group mb-2 per-especialidad" th:each="esp, st : *{especialidades}">
+                                <input type="text" class="form-control" maxlength="100"
+                                       th:id="|especialidad${st.index}|" th:name="|especialidades[${st.index}]|" th:value="${esp}"
+                                       th:classappend="${#fields.hasErrors('especialidadCapturada')} ? 'is-invalid'"
+                                       placeholder="Área o estudios del perito, por ejemplo: Psicología forense">
+                                <button type="button" class="btn btn-outline-secondary bg-white" data-quitar-especialidad
+                                        title="Quitar especialidad" aria-label="Quitar especialidad">&times;</button>
+                            </div>
+                        </div>
+                        <div class="text-danger small mb-1" th:if="${#fields.hasErrors('especialidadCapturada')}"
+                             th:errors="*{especialidadCapturada}"></div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary bg-white" data-agregar-especialidad>+ Agregar otra especialidad</button>
+                    </div>
+
+                    <fieldset class="mb-3">
+                        <legend class="form-label fs-6">Materias de intervención *</legend>
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="per-opcion" th:each="m : ${materias}">
+                                <input type="checkbox" class="btn-check per-materia" autocomplete="off"
+                                       th:field="*{materiasIds}" th:value="${m.id}">
+                                <label class="btn btn-sm" th:for="${#ids.prev('materiasIds')}" th:text="${m.nombre}"></label>
+                            </span>
+                        </div>
+                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('materiasIds')}" th:errors="*{materiasIds}"></div>
+                        <div class="form-text" data-contador-materias>Seleccione al menos una materia para la asignación.</div>
+                    </fieldset>
+
+                    <div class="d-flex justify-content-between align-items-center border-top pt-3">
+                        <span class="form-label mb-0">Estado inicial</span>
+                        <span class="per-estado">Activo</span>
+                    </div>
+                </section>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a class="btn btn-outline-secondary bg-white" th:href="@{/peritajes/peritos}">Cancelar</a>
+                    <button type="submit" class="btn btn-per">Guardar perito</button>
+                </div>
+            </form>
+        </main>
+
+        <footer th:replace="~{peritajes/fragmentos :: pie}"></footer>
+    </div>
+</div>
+
+<th:block th:replace="~{peritajes/fragmentos :: scripts}"></th:block>
+</body>
+</html>

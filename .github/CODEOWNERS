@@ -1,0 +1,62 @@
+*                                                    @sij-utez-2026/integradores
+
+# Núcleo y archivos compartidos
+/src/main/java/mx/edu/utez/sij/nucleo/               @sij-utez-2026/integradores
+/src/main/resources/templates/nucleo/                @sij-utez-2026/integradores
+/src/main/resources/templates/error/                 @sij-utez-2026/integradores
+/src/main/resources/static/nucleo/                   @sij-utez-2026/integradores
+/src/main/resources/application*.properties          @sij-utez-2026/integradores
+/pom.xml                                             @sij-utez-2026/integradores
+/docs/ARQUITECTURA.md                                @sij-utez-2026/integradores
+/docs/CONTRATOS.md                                   @sij-utez-2026/integradores
+/docs/FLUJO_DE_TRABAJO.md                            @sij-utez-2026/lideres
+/docs/GUIA_GITHUB.md                                 @sij-utez-2026/lideres
+/.github/                                            @sij-utez-2026/lideres
+/AGENTS.md                                           @sij-utez-2026/lideres
+
+# Módulos (código, vistas, estáticos, correo, PDF y documentación)
+/src/main/java/mx/edu/utez/sij/oficialia/            @sij-utez-2026/equipo-1
+/src/main/resources/templates/oficialia/             @sij-utez-2026/equipo-1
+/src/main/resources/static/oficialia/                @sij-utez-2026/equipo-1
+/src/main/resources/templates/correo/oficialia/      @sij-utez-2026/equipo-1
+/src/main/resources/templates/pdf/oficialia/         @sij-utez-2026/equipo-1
+/src/test/java/mx/edu/utez/sij/oficialia/            @sij-utez-2026/equipo-1
+/docs/modulos/oficialia*                             @sij-utez-2026/equipo-1
+
+/src/main/java/mx/edu/utez/sij/audiencias/           @sij-utez-2026/equipo-2
+/src/main/resources/templates/audiencias/            @sij-utez-2026/equipo-2
+/src/main/resources/static/audiencias/               @sij-utez-2026/equipo-2
+/src/main/resources/templates/correo/audiencias/     @sij-utez-2026/equipo-2
+/src/main/resources/templates/pdf/audiencias/        @sij-utez-2026/equipo-2
+/src/test/java/mx/edu/utez/sij/audiencias/           @sij-utez-2026/equipo-2
+/docs/modulos/audiencias*                            @sij-utez-2026/equipo-2
+
+/src/main/java/mx/edu/utez/sij/peritajes/            @sij-utez-2026/equipo-3
+/src/main/resources/templates/peritajes/             @sij-utez-2026/equipo-3
+/src/main/resources/static/peritajes/                @sij-utez-2026/equipo-3
+/src/main/resources/templates/correo/peritajes/      @sij-utez-2026/equipo-3
+/src/main/resources/templates/pdf/peritajes/         @sij-utez-2026/equipo-3
+/src/test/java/mx/edu/utez/sij/peritajes/            @sij-utez-2026/equipo-3
+/docs/modulos/peritajes*                             @sij-utez-2026/equipo-3
+
+/src/main/java/mx/edu/utez/sij/segunda/              @sij-utez-2026/equipo-4
+/src/main/resources/templates/segunda/               @sij-utez-2026/equipo-4
+/src/main/resources/static/segunda/                  @sij-utez-2026/equipo-4
+/src/main/resources/templates/correo/segunda/        @sij-utez-2026/equipo-4
+/src/main/resources/templates/pdf/segunda/           @sij-utez-2026/equipo-4
+/src/test/java/mx/edu/utez/sij/segunda/              @sij-utez-2026/equipo-4
+/docs/modulos/segunda*                               @sij-utez-2026/equipo-4
+
+/src/main/java/mx/edu/utez/sij/copias/               @sij-utez-2026/equipo-5
+/src/main/resources/templates/copias/                @sij-utez-2026/equipo-5
+/src/main/resources/static/copias/                   @sij-utez-2026/equipo-5
+/src/main/resources/templates/correo/copias/         @sij-utez-2026/equipo-5
+/src/main/resources/templates/pdf/copias/            @sij-utez-2026/equipo-5
+/src/test/java/mx/edu/utez/sij/copias/               @sij-utez-2026/equipo-5
+/docs/modulos/copias*                                @sij-utez-2026/equipo-5
+
+# Contratos: dueño del módulo + integradores
+/src/main/java/mx/edu/utez/sij/nucleo/contratos/oficialia/   @sij-utez-2026/equipo-1 @sij-utez-2026/integradores
+/src/main/java/mx/edu/utez/sij/nucleo/contratos/audiencias/  @sij-utez-2026/equipo-2 @sij-utez-2026/integradores
+/src/main/java/mx/edu/utez/sij/nucleo/contratos/peritajes/   @sij-utez-2026/equipo-3 @sij-utez-2026/integradores
+/src/main/java/mx/edu/utez/sij/nucleo/contratos/segunda/     @sij-utez-2026/equipo-4 @sij-utez-2026/integradores
