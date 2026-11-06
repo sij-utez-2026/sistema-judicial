@@ -171,6 +171,31 @@
     width: 3.5rem;
 }
 
+/* TEMPORAL: selector "Modo de prueba" del menú (se borra con el inicio de sesión del núcleo) */
+.cop-modo-prueba {
+    padding: 0 .75rem;
+}
+
+.cop-modo-opcion {
+    flex: 1;
+    color: rgba(255, 255, 255, .8);
+    border: 1px solid rgba(255, 255, 255, .35);
+    background: transparent;
+}
+
+.cop-modo-opcion:hover {
+    color: #fff;
+    border-color: var(--sij-acento);
+}
+
+.cop-modo-activo,
+.cop-modo-activo:hover {
+    color: var(--sij-primario);
+    background: var(--sij-acento);
+    border-color: var(--sij-acento);
+    font-weight: 600;
+}
+
 /* Comprobante: al imprimir solo sale el comprobante */
 .cop-comprobante {
     max-width: 720px;

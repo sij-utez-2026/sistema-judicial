@@ -1,5 +1,6 @@
 package mx.edu.utez.sij.copias.service;
 
+import mx.edu.utez.sij.copias.RolesCopias;
 import mx.edu.utez.sij.copias.dto.ColoresForm;
 import mx.edu.utez.sij.copias.dto.PersonalForm;
 import mx.edu.utez.sij.copias.temporal.ReglaNegocioException;
@@ -28,7 +29,7 @@ class AdminCopiasServiceTest {
         Usuario ana = p.personalService.registrar(trabajador(" Ana  Ruiz ", " Ana@Example.com "));
         assertEquals("Ana Ruiz", ana.getNombre());
         assertEquals("ana@example.com", ana.getCorreo());
-        assertTrue(ana.getRoles().contains(PersonalCopiasService.ROL_PERSONAL));
+        assertTrue(ana.getRoles().contains(RolesCopias.PERSONAL));
 
         assertThrows(ReglaNegocioException.class,
                 () -> p.personalService.registrar(trabajador("Otra", "ANA@example.com")));

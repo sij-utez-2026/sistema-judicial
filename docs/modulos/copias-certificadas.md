@@ -56,6 +56,10 @@ Digitaliza la captura, validación, cobro y entrega de copias certificadas de de
 | `COPIAS_PERSONAL` (trabajador o juzgado) | Login | Capturar solicitudes, validar privadas (ve la INE), registrar el pago, imprimir o enviar el comprobante, avisar y registrar la entrega |
 | `COPIAS_ADMIN` (administrador del área) | Login | Dar de alta, desactivar y reactivar trabajadores; cambiar los colores de Copias |
 
+**Las vistas están separadas:** cada rol tiene su propio inicio, su menú y sus pantallas, y no puede abrir las del otro (página 403). El administrador no captura ni entrega solicitudes.
+
+**Mientras no exista el inicio de sesión del núcleo (TEMPORAL):** el menú tiene un selector **"Modo de prueba: Trabajador | Administrador"** que guarda el rol en la sesión del navegador (sin usuario ni contraseña). Al empezar, el rol es Trabajador.
+
 ---
 
 ## 4. Modelo de datos
@@ -201,7 +205,8 @@ stateDiagram-v2
 - No hay rutas públicas: todo `/copias/**` pide sesión.
 - La INE solo se ve en `/copias/validacion/{id}/ine` (`COPIAS_PERSONAL`), se sirve con su tipo según la extensión ya validada y sin caché.
 - Todo dato en las JSP con `<c:out>`; formularios `POST` con `<form:form>` o `<n:confirmar>`.
-- TODO núcleo: `@PreAuthorize` en cada controller (ya marcado con `// TODO`) y bitácora en cada cambio de estado (`HistorialService`).
+- Cada controller revisa el rol antes de cualquiera de sus rutas: hoy con `AccesoTemporal` (método `@ModelAttribute`), con Spring Security con `@PreAuthorize` en la clase.
+- TODO núcleo: bitácora en cada cambio de estado (`HistorialService`).
 
 ---
 
@@ -228,7 +233,7 @@ Ya no se necesita `CatalogoJudicialApi`: el juzgado y la materia vienen del expe
 
 | Método | URL | Rol | Vista / acción |
 | :---- | :---- | :---- | :---- |
-| GET | `/copias` | PERSONAL, ADMIN | Inicio: por validar, sin pagar, por entregar y últimas solicitudes |
+| GET | `/copias` | PERSONAL (ADMIN → `/copias/admin`) | Inicio del trabajador: por validar, sin pagar, por entregar y últimas solicitudes |
 | GET | `/copias/solicitudes` | PERSONAL | Registro con búsqueda, filtro por estado y paginación |
 | GET | `/copias/solicitudes/nueva?expediente=` | PERSONAL | Buscar expediente y capturar al solicitante |
 | POST | `/copias/solicitudes/nueva` | PERSONAL | Registrar la solicitud (multipart, con INE si es privado) |
@@ -243,10 +248,12 @@ Ya no se necesita `CatalogoJudicialApi`: el juzgado y la materia vienen del expe
 | GET | `/copias/entregas` | PERSONAL | Pagadas pendientes de entrega |
 | POST | `/copias/entregas/{id}/avisar` | PERSONAL | Correo "lista para recoger" |
 | POST | `/copias/entregas/{id}/entregar` | PERSONAL | Registrar la entrega |
+| GET | `/copias/admin` | ADMIN | Inicio del administrador: trabajadores y colores |
 | GET / POST | `/copias/admin/personal` | ADMIN | Trabajadores: lista y alta |
 | POST | `/copias/admin/personal/{id}/estado` | ADMIN | Desactivar o reactivar (`activo`) |
 | GET / POST | `/copias/admin/colores` | ADMIN | Colores del área |
 | POST | `/copias/admin/colores/restablecer` | ADMIN | Volver a la paleta institucional |
+| POST | `/copias/modo-prueba` | TEMPORAL | Cambiar entre Trabajador y Administrador (`rol`); se borra con el login del núcleo |
 
 ---
 
@@ -254,8 +261,10 @@ Ya no se necesita `CatalogoJudicialApi`: el juzgado y la materia vienen del expe
 
 ```text
 src/main/java/mx/edu/utez/sij/copias/
-├── controller/   InicioCopiasController, SolicitudController, ValidacionController, PagoController,
-│                 EntregaController, AdminCopiasController, CopiasVistasAdvice (colores en todas las vistas)
+├── RolesCopias.java   COPIAS_PERSONAL y COPIAS_ADMIN
+├── controller/   TRABAJADOR: InicioCopiasController, SolicitudController, ValidacionController, PagoController,
+│   │             EntregaController · CopiasVistasAdvice (colores y menú por rol en todas las vistas)
+│   └── admin/    ADMINISTRADOR: AdminInicioController, TrabajadoresController, ColoresController
 ├── service/      SolicitudCopiaService, ValidacionService, PagoService, EntregaService, CorreoCopiasService,
 │                 HistorialService, FolioService, TarifaService, PersonalCopiasService, ColoresCopiasService
 ├── repository/   interfaces con nombres de Spring Data JPA
@@ -264,9 +273,12 @@ src/main/java/mx/edu/utez/sij/copias/
 │                 EstadoSolicitud, TipoCorreo, Formatos
 ├── dto/          SolicitudForm, PersonalForm, ColoresForm
 ├── temporal/     TEMPORAL: lo que darán el núcleo y Oficialía (ExpedienteApi, archivos, correo, sesión, usuarios)
+│                 y el "Modo de prueba" (SesionTemporal, AccesoTemporal, ModoPruebaController)
 └── DatosInicialesCopias.java
 
-front-end/WEB-INF/jsp/copias/   inicio, menu, solicitudes/, validacion/, pagos/, entregas/, admin/
+front-end/WEB-INF/jsp/copias/   TRABAJADOR: inicio, solicitudes/, validacion/, pagos/, entregas/
+                                ADMINISTRADOR: admin/ (inicio, personal, colores)
+                                menu.jsp (un menú por rol)
 front-end/WEB-INF/tags/copias/  estilos.tag (CSS de Copias + colores del área)
 front-end/recursos/copias/      css/copias.css, js/copias.js
 src/test/java/mx/edu/utez/sij/copias/service/   pruebas de los services
@@ -283,7 +295,7 @@ Todo lo temporal tiene un comentario `TEMPORAL` o `TODO`. Cuando lleguen:
 | MySQL (integradores quitan la exclusión en `application.properties`) | Cada `...Repository` pasa a `extends JpaRepository<..., Long>`, se borran los métodos que ya trae, `buscar` lleva la `@Query` de su comentario y se borra `repository/memoria/` | Entidades (ya tienen `@Entity`, `@Table` y `@Column`), services, controllers y JSP |
 | `ExpedienteApi` de Oficialía | Cambiar los import a `nucleo.contratos.oficialia` y borrar `temporal/ExpedienteApi*` | Lo demás |
 | Servicios del núcleo | Cambiar `ArchivoServiceTemporal`, `CorreoTemporal`, `SesionTemporal`, `UsuarioServiceTemporal` y `ReglaNegocioException` por los del núcleo | Services y controllers (mismos métodos) |
-| Spring Security | Poner los `@PreAuthorize` de los `// TODO` y `sec:authorize` en `menu.jsp` | Lo demás |
+| Spring Security e inicio de sesión | En cada controller, borrar el método `soloTrabajador()` / `soloAdministrador()` y poner el `@PreAuthorize` del `// TODO` en la clase. En `menu.jsp`, cambiar el `<c:choose>` por `<sec:authorize>` y quitar el "Modo de prueba". Borrar `SesionTemporal`, `AccesoTemporal`, `ModoPruebaController` y `esAdminCopias` de `CopiasVistasAdvice` | Pantallas, services y la separación por rol |
 | `PdfService` | Plantilla `templates/pdf/copias/comprobante.html` y adjuntarlo al correo | La pantalla del comprobante |
 
 `@Transactional` ya está en los services: hoy no hace nada porque no hay base de datos.

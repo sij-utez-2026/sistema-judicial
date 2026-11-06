@@ -1,7 +1,9 @@
 package mx.edu.utez.sij.copias.controller;
 
 import jakarta.validation.Valid;
+import mx.edu.utez.sij.copias.RolesCopias;
 import mx.edu.utez.sij.copias.dto.SolicitudForm;
+import mx.edu.utez.sij.copias.temporal.AccesoTemporal;
 import mx.edu.utez.sij.copias.model.EstadoSolicitud;
 import mx.edu.utez.sij.copias.model.SolicitudCopia;
 import mx.edu.utez.sij.copias.service.CorreoCopiasService;
@@ -40,15 +42,23 @@ public class SolicitudController {
     private final PagoService pagoService;
     private final EntregaService entregaService;
     private final CorreoCopiasService correoService;
+    private final AccesoTemporal acceso;
 
     public SolicitudController(SolicitudCopiaService solicitudService, HistorialService historialService,
                                PagoService pagoService, EntregaService entregaService,
-                               CorreoCopiasService correoService) {
+                               CorreoCopiasService correoService, AccesoTemporal acceso) {
         this.solicitudService = solicitudService;
         this.historialService = historialService;
         this.pagoService = pagoService;
         this.entregaService = entregaService;
         this.correoService = correoService;
+        this.acceso = acceso;
+    }
+
+    // TEMPORAL: se cambia por @PreAuthorize en la clase cuando exista Spring Security
+    @ModelAttribute
+    public void soloTrabajador() {
+        acceso.exigirRol(RolesCopias.PERSONAL);
     }
 
     // Registro de solicitudes con su estado (en espera, sin pagar, entregado...)

@@ -8,7 +8,7 @@
 <t:layout titulo="Trabajadores" modulo="copias" seccion="personal">
     <jsp:attribute name="estilos"><cop:estilos/></jsp:attribute>
     <jsp:body>
-        <n:migas>Administración / Trabajadores</n:migas>
+        <n:migas><a href="<c:url value='/copias/admin'/>">Administración</a> / Trabajadores</n:migas>
         <n:encabezado titulo="Trabajadores del área"
                       descripcion="Personal que captura, valida, cobra y entrega las copias certificadas."/>
 

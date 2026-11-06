@@ -1,6 +1,9 @@
 package mx.edu.utez.sij.copias.controller;
 
+import mx.edu.utez.sij.copias.RolesCopias;
 import mx.edu.utez.sij.copias.model.CorreoEnviado;
+import mx.edu.utez.sij.copias.temporal.AccesoTemporal;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import mx.edu.utez.sij.copias.model.Pago;
 import mx.edu.utez.sij.copias.model.SolicitudCopia;
 import mx.edu.utez.sij.copias.service.CorreoCopiasService;
@@ -33,13 +36,22 @@ public class PagoController {
     private final SolicitudCopiaService solicitudService;
     private final EntregaService entregaService;
     private final CorreoCopiasService correoService;
+    private final AccesoTemporal acceso;
 
     public PagoController(PagoService pagoService, SolicitudCopiaService solicitudService,
-                          EntregaService entregaService, CorreoCopiasService correoService) {
+                          EntregaService entregaService, CorreoCopiasService correoService,
+                          AccesoTemporal acceso) {
         this.pagoService = pagoService;
         this.solicitudService = solicitudService;
         this.entregaService = entregaService;
         this.correoService = correoService;
+        this.acceso = acceso;
+    }
+
+    // TEMPORAL: se cambia por @PreAuthorize en la clase cuando exista Spring Security
+    @ModelAttribute
+    public void soloTrabajador() {
+        acceso.exigirRol(RolesCopias.PERSONAL);
     }
 
     // Resumen antes de pagar: expediente, costo congelado y la leyenda de pago simulado

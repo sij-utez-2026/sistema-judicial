@@ -14,7 +14,7 @@
         <script src="<c:url value='/recursos/copias/js/copias.js'/>"></script>
     </jsp:attribute>
     <jsp:body>
-        <n:migas>Administración / Colores</n:migas>
+        <n:migas><a href="<c:url value='/copias/admin'/>">Administración</a> / Colores</n:migas>
         <n:encabezado titulo="Colores del área"
                       descripcion="Cambian solo las pantallas de Copias Certificadas. Los valores iniciales son la paleta institucional.">
             <n:confirmar accion="/copias/admin/colores/restablecer"
@@ -52,7 +52,7 @@
             </n:tarjeta>
 
             <div class="d-flex justify-content-end gap-2">
-                <a class="btn btn-sij-secundario" href="<c:url value='/copias'/>">Cancelar</a>
+                <a class="btn btn-sij-secundario" href="<c:url value='/copias/admin'/>">Cancelar</a>
                 <button type="submit" class="btn btn-primary">Guardar colores</button>
             </div>
         </form:form>

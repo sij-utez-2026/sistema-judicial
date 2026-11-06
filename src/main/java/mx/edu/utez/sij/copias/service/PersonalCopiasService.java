@@ -1,5 +1,6 @@
 package mx.edu.utez.sij.copias.service;
 
+import mx.edu.utez.sij.copias.RolesCopias;
 import mx.edu.utez.sij.copias.dto.PersonalForm;
 import mx.edu.utez.sij.copias.temporal.ReglaNegocioException;
 import mx.edu.utez.sij.copias.temporal.UsuarioServiceTemporal;
@@ -20,10 +21,7 @@ import java.util.Locale;
 @Service
 public class PersonalCopiasService {
 
-    /** Trabajador: captura, valida, cobra y entrega. */
-    public static final String ROL_PERSONAL = "COPIAS_PERSONAL";
-    /** Administrador del área: trabajadores y colores. */
-    public static final String ROL_ADMIN = "COPIAS_ADMIN";
+    private static final String ROL_PERSONAL = RolesCopias.PERSONAL;
 
     private final UsuarioServiceTemporal usuarioService;
 

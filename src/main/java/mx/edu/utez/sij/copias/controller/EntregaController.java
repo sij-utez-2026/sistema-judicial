@@ -1,6 +1,9 @@
 package mx.edu.utez.sij.copias.controller;
 
+import mx.edu.utez.sij.copias.RolesCopias;
 import mx.edu.utez.sij.copias.model.CorreoEnviado;
+import mx.edu.utez.sij.copias.temporal.AccesoTemporal;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import mx.edu.utez.sij.copias.model.Pago;
 import mx.edu.utez.sij.copias.model.SolicitudCopia;
 import mx.edu.utez.sij.copias.service.EntregaService;
@@ -33,12 +36,20 @@ public class EntregaController {
     private final EntregaService entregaService;
     private final PagoService pagoService;
     private final SolicitudCopiaService solicitudService;
+    private final AccesoTemporal acceso;
 
     public EntregaController(EntregaService entregaService, PagoService pagoService,
-                             SolicitudCopiaService solicitudService) {
+                             SolicitudCopiaService solicitudService, AccesoTemporal acceso) {
         this.entregaService = entregaService;
         this.pagoService = pagoService;
         this.solicitudService = solicitudService;
+        this.acceso = acceso;
+    }
+
+    // TEMPORAL: se cambia por @PreAuthorize en la clase cuando exista Spring Security
+    @ModelAttribute
+    public void soloTrabajador() {
+        acceso.exigirRol(RolesCopias.PERSONAL);
     }
 
     @GetMapping

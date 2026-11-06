@@ -1,6 +1,9 @@
 package mx.edu.utez.sij.copias.controller;
 
+import mx.edu.utez.sij.copias.RolesCopias;
 import mx.edu.utez.sij.copias.model.EstadoSolicitud;
+import mx.edu.utez.sij.copias.temporal.AccesoTemporal;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import mx.edu.utez.sij.copias.model.SolicitudCopia;
 import mx.edu.utez.sij.copias.service.SolicitudCopiaService;
 import mx.edu.utez.sij.copias.service.ValidacionService;
@@ -35,10 +38,19 @@ public class ValidacionController {
 
     private final ValidacionService validacionService;
     private final SolicitudCopiaService solicitudService;
+    private final AccesoTemporal acceso;
 
-    public ValidacionController(ValidacionService validacionService, SolicitudCopiaService solicitudService) {
+    public ValidacionController(ValidacionService validacionService, SolicitudCopiaService solicitudService,
+                                AccesoTemporal acceso) {
         this.validacionService = validacionService;
         this.solicitudService = solicitudService;
+        this.acceso = acceso;
+    }
+
+    // TEMPORAL: se cambia por @PreAuthorize en la clase cuando exista Spring Security
+    @ModelAttribute
+    public void soloTrabajador() {
+        acceso.exigirRol(RolesCopias.PERSONAL);
     }
 
     @GetMapping

@@ -1,10 +1,10 @@
-package mx.edu.utez.sij.copias.controller;
+package mx.edu.utez.sij.copias.controller.admin;
 
 import jakarta.validation.Valid;
-import mx.edu.utez.sij.copias.dto.ColoresForm;
+import mx.edu.utez.sij.copias.RolesCopias;
 import mx.edu.utez.sij.copias.dto.PersonalForm;
-import mx.edu.utez.sij.copias.service.ColoresCopiasService;
 import mx.edu.utez.sij.copias.service.PersonalCopiasService;
+import mx.edu.utez.sij.copias.temporal.AccesoTemporal;
 import mx.edu.utez.sij.copias.temporal.ReglaNegocioException;
 import mx.edu.utez.sij.copias.temporal.UsuarioServiceTemporal.Usuario;
 import org.springframework.stereotype.Controller;
@@ -19,33 +19,37 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * Administración del área (COPIAS_ADMIN): trabajadores y colores de las pantallas de Copias.
+ * Trabajadores del área (RF 6.1, COPIAS_ADMIN): alta, desactivar y reactivar a COPIAS_PERSONAL.
  *
  * TODO: @PreAuthorize("hasRole('COPIAS_ADMIN')") cuando los integradores agreguen Spring Security.
  */
 @Controller
-@RequestMapping("/copias/admin")
-public class AdminCopiasController {
+@RequestMapping("/copias/admin/personal")
+public class TrabajadoresController {
 
     private final PersonalCopiasService personalService;
-    private final ColoresCopiasService coloresService;
+    private final AccesoTemporal acceso;
 
-    public AdminCopiasController(PersonalCopiasService personalService, ColoresCopiasService coloresService) {
+    public TrabajadoresController(PersonalCopiasService personalService, AccesoTemporal acceso) {
         this.personalService = personalService;
-        this.coloresService = coloresService;
+        this.acceso = acceso;
     }
 
-    // ===== Trabajadores =====
+    // TEMPORAL: se cambia por @PreAuthorize en la clase cuando exista Spring Security
+    @ModelAttribute
+    public void soloAdministrador() {
+        acceso.exigirRol(RolesCopias.ADMIN);
+    }
 
-    @GetMapping("/personal")
-    public String personal(Model model) {
+    @GetMapping
+    public String listar(Model model) {
         model.addAttribute("personalForm", new PersonalForm());
-        return mostrarPersonal(model);
+        return mostrar(model);
     }
 
-    @PostMapping("/personal")
-    public String registrarPersonal(@Valid @ModelAttribute("personalForm") PersonalForm form,
-                                    BindingResult resultado, Model model, RedirectAttributes flash) {
+    @PostMapping
+    public String registrar(@Valid @ModelAttribute("personalForm") PersonalForm form,
+                            BindingResult resultado, Model model, RedirectAttributes flash) {
         if (!resultado.hasErrors()) {
             try {
                 Usuario usuario = personalService.registrar(form);
@@ -57,10 +61,10 @@ public class AdminCopiasController {
                 model.addAttribute("error", e.getMessage());
             }
         }
-        return mostrarPersonal(model);
+        return mostrar(model);
     }
 
-    @PostMapping("/personal/{id}/estado")
+    @PostMapping("/{id}/estado")
     public String cambiarEstado(@PathVariable Long id, @RequestParam boolean activo, RedirectAttributes flash) {
         try {
             Usuario usuario = personalService.cambiarEstado(id, activo);
@@ -73,44 +77,8 @@ public class AdminCopiasController {
         return "redirect:/copias/admin/personal";
     }
 
-    private String mostrarPersonal(Model model) {
+    private String mostrar(Model model) {
         model.addAttribute("trabajadores", personalService.trabajadores());
         return "copias/admin/personal";
-    }
-
-    // ===== Colores =====
-
-    @GetMapping("/colores")
-    public String colores(Model model) {
-        model.addAttribute("coloresForm", coloresService.formulario());
-        return mostrarColores(model);
-    }
-
-    @PostMapping("/colores")
-    public String guardarColores(@Valid @ModelAttribute("coloresForm") ColoresForm form,
-                                 BindingResult resultado, Model model, RedirectAttributes flash) {
-        if (!resultado.hasErrors()) {
-            try {
-                coloresService.guardar(form);
-                flash.addFlashAttribute("exito", "Colores actualizados correctamente");
-                return "redirect:/copias/admin/colores";
-            } catch (ReglaNegocioException e) {
-                model.addAttribute("error", e.getMessage());
-            }
-        }
-        return mostrarColores(model);
-    }
-
-    @PostMapping("/colores/restablecer")
-    public String restablecerColores(RedirectAttributes flash) {
-        coloresService.restablecer();
-        flash.addFlashAttribute("exito", "Colores restablecidos");
-        flash.addFlashAttribute("exitoDetalle", "Se volvió a la paleta institucional.");
-        return "redirect:/copias/admin/colores";
-    }
-
-    private String mostrarColores(Model model) {
-        model.addAttribute("coloresIniciales", coloresService.formularioInicial());
-        return "copias/admin/colores";
     }
 }
