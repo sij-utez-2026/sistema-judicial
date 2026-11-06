@@ -20,6 +20,7 @@
 - [ ] Solo modifiqué archivos de mi módulo (si no, lo explico abajo)
 - [ ] No uso Repository, Service ni entidades de otro módulo
 - [ ] URLs con `/<mi-prefijo>/`, tablas con `<pre>_`, `@PreAuthorize` en controllers
+- [ ] Mis JSP están en `front-end/WEB-INF/jsp/<mi-prefijo>/`, usan `<t:layout modulo="...">` y los componentes `<n:...>`, y muestran los datos con `<c:out>`
 - [ ] Si renombré o quité atributos de una entidad, lo aviso aquí
 - [ ] Actualicé `docs/modulos/<mi-modulo>.md` si cambié rutas, tablas o contratos
 - [ ] No subí `application-local.properties`, contraseñas, `target/` ni `.idea/`
