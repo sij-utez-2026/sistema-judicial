@@ -3,7 +3,7 @@
 | Dato | Valor |
 | :---- | :---- |
 | Equipo | **Equipo 3** · rama `equipo-3` |
-| Prefijo | Paquete `mx.edu.utez.sij.peritajes` · URLs `/peritajes/...` · vistas `templates/peritajes/` · tablas `per_` · roles `PERITAJES_*` |
+| Prefijo | Paquete `mx.edu.utez.sij.peritajes` · URLs `/peritajes/...` · vistas `front-end/WEB-INF/jsp/peritajes/` · tablas `per_` · roles `PERITAJES_*` |
 | Fuente | DFR IEEE 830 v1.1 y BPMN v3 (`docs/modulos/peritajes/`) |
 | Líder | Contreras Carbajal Marco Antonio |
 | Project Manager | Escalona Ruiz Nathaly |
@@ -326,15 +326,16 @@ peritajes/
 ├── model/        Perito, Peritaje, EstadoPeritaje (enum), Dictamen, EstadoDictamen (enum), HistorialAsignacion, ...
 ├── dto/          PeritoForm, CargaPerito, PeritajeActivoDto, ReasignacionForm, FiltroCasos
 └── DatosInicialesPeritajes.java
-templates/peritajes/  fragmentos.html  casos/  peritos/ (lista, registro, editar)  mis-casos/  bitacora.html  panel.html
-static/peritajes/  css/peritajes.css  js/peritos.js  js/dictamen.js      templates/correo/peritajes/
+front-end/WEB-INF/jsp/peritajes/  inicio.jsp  menu.jsp  peritos/ (lista, registro, editar)  casos/  mis-casos/  bitacora.jsp  panel.jsp
+front-end/recursos/peritajes/     css/peritajes.css  js/peritos.js  js/dictamen.js
+src/main/resources/templates/correo/peritajes/
 ```
 
 **Temporal mientras no hay base de datos ni núcleo** (cada clase lo dice en su comentario):
 - `PeritoRepositoryMemoria`: guarda en memoria. Se borra cuando `PeritoRepository` extienda `JpaRepository` (los pasos y las `@Query` están en la interfaz).
 - `CatalogoMateriasTemporal` y `dto/MateriaDto`: se cambian por `CatalogoJudicialApi`.
 - `service/ReglaNegocioException`: se cambia por la del núcleo.
-- `templates/peritajes/fragmentos.html` y `controller/PeritajesVistasAdvice`: layout del módulo hasta que exista el del núcleo.
+- El menú lateral y el encabezado ya son los del núcleo (`front-end/WEB-INF/tags/layout.tag`); las opciones del menú están en `front-end/WEB-INF/jsp/peritajes/menu.jsp`. Lo que falta del núcleo es el usuario en sesión y "Cerrar sesión".
 
 ---
 
@@ -350,7 +351,7 @@ static/peritajes/  css/peritajes.css  js/peritos.js  js/dictamen.js      templat
 | 1.1 y 1.2 | Requerimientos propios | Nota: "Se implementan con el control de acceso común". Las reglas comunes: 3 intentos, bloqueo de 15 min, contraseña de 8 caracteres |
 | 3.1 Interfaces | Interfaz con un sistema externo | Interfaces internas `SolicitudPeritajeApi` y `DictamenConsultaApi` |
 | 4.5 | Opcional, por confirmar | Confirmado: lo usan Audiencias 6.3 y Segunda 6.1 |
-| 3.3.8 Tecnologías | Vacío | Java 21, Spring Boot 3 (MVC), Thymeleaf, Bootstrap 5, Spring Security, Spring Data JPA, MySQL 8 |
+| 3.3.8 Tecnologías | Vacío | Java 21, Spring Boot 4 (MVC), JSP + JSTL, Bootstrap 5, Spring Security, Spring Data JPA, MySQL 8 |
 | Materias | Civil, Familiar, Mercantil, Penal | Vienen del catálogo de Oficialía (pendiente 2) |
 | Carga activa (2.2, 2.3, 3.4, 5.3, Glosario) | Solo "Asignado" | "Asignado y En Proceso" |
 | 2.4 Cancelación | "Se elimina del sistema" | Pasa a "Cancelado" y se conserva |
