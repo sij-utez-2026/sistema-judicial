@@ -1,0 +1,46 @@
+/*
+ * Estilos propios del módulo de Peritajes (bocetos de docs/modulos/peritajes-figma-*.png).
+ * Lo común (menú lateral, tarjetas, tablas, estados, botones) ya está en
+ * front-end/recursos/nucleo/css/estilos.css: aquí solo va lo que no existe ahí.
+ */
+
+/*
+ * Materias como botones seleccionables: ☐ Civil  ✓ Familiar
+ * Cada casilla va dentro de un <span class="per-opcion"> porque <form:checkbox> agrega un input oculto
+ * entre la casilla y su etiqueta; por eso se usa "~" y no "+".
+ */
+.per-opcion .btn {
+    border-color: var(--sij-borde);
+    background: #fff;
+    color: var(--sij-texto);
+}
+
+.per-opcion .btn::before {
+    content: "\2610  ";
+}
+
+.per-opcion .per-materia:checked ~ .btn {
+    background: var(--sij-primario);
+    border-color: var(--sij-primario);
+    color: #fff;
+}
+
+.per-opcion .per-materia:checked ~ .btn::before {
+    content: "\2713  ";
+}
+
+.per-opcion .per-materia:focus-visible ~ .btn {
+    box-shadow: 0 0 0 .2rem rgba(31, 58, 44, .25);
+}
+
+/* Activo / Inactivo en la edición */
+.per-segmento + .btn {
+    border-color: var(--sij-borde);
+    background: #fff;
+}
+
+.per-segmento:checked + .btn {
+    background: var(--sij-primario);
+    border-color: var(--sij-primario);
+    color: #fff;
+}
