@@ -11,6 +11,8 @@
 	<groupId>mx.edu.utez</groupId>
 	<artifactId>integradora</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<!-- War: lo exige JSP en Spring Boot (docs/ARQUITECTURA.md, sección 16) -->
+	<packaging>war</packaging>
 	<name>integradora</name>
 	<description/>
 	<url/>
@@ -37,6 +39,31 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
+		</dependency>
+		<!-- Thymeleaf SOLO para plantillas de PDF y correo (las usa el núcleo). Se usa la librería y no el
+		     starter para que no resuelva pantallas: las pantallas son JSP (docs/ARQUITECTURA.md, sección 16). -->
+		<dependency>
+			<groupId>org.thymeleaf</groupId>
+			<artifactId>thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<!-- Pantallas JSP + JSTL (carpeta front-end/). Las versiones las pone Spring Boot. -->
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.servlet.jsp.jstl</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
 		</dependency>
 
 		<dependency>
@@ -67,6 +94,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<!-- La carpeta front-end/ de la raíz es la raíz del War (JSP, tags y recursos) -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<warSourceDirectory>front-end</warSourceDirectory>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
