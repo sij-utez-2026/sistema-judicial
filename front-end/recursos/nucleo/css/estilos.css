@@ -1,0 +1,363 @@
+/*
+ * Estilos comunes del Sistema Judicial Integral (INTEGRADORES).
+ * Se apoya en Bootstrap 5: aquí solo van los colores institucionales, el layout
+ * (menú lateral + encabezado) y los componentes de WEB-INF/tags/nucleo/.
+ *
+ * Los equipos NO editan este archivo. Sus estilos propios van en
+ * front-end/recursos/<prefijo>/css/ con clases que empiecen por su prefijo corto (per-, aud-, ofi-, sin-, cop-).
+ * Para cambiar un color del sistema, abrir un issue para los integradores.
+ */
+:root {
+    --sij-primario: #1f3a2c;          /* menú lateral y botones principales */
+    --sij-primario-hover: #2b4d3b;
+    --sij-primario-claro: #e8efe9;
+    --sij-acento: #c9a54a;            /* dorado: detalles */
+    --sij-fondo: #f5f3ec;             /* fondo crema */
+    --sij-borde: #e3e0d6;
+    --sij-texto: #1d1d1b;
+    --sij-texto-suave: #6b6b63;
+    --sij-ancho-menu: 250px;
+
+    /* Bootstrap toma estos colores para enlaces y foco */
+    --bs-link-color: var(--sij-primario);
+    --bs-link-color-rgb: 31, 58, 44;
+    --bs-link-hover-color: var(--sij-primario-hover);
+    --bs-link-hover-color-rgb: 43, 77, 59;
+}
+
+body.sij-body {
+    background: var(--sij-fondo);
+    color: var(--sij-texto);
+    font-size: .95rem;
+}
+
+/* ===================== Layout: menú lateral + contenido ===================== */
+.sij-app {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sij-sidebar {
+    /* !important: en pantallas grandes Bootstrap deja el offcanvas transparente */
+    background: var(--sij-primario) !important;
+    color: #e9eee9;
+    width: var(--sij-ancho-menu);
+    flex-shrink: 0;
+}
+
+@media (min-width: 992px) {
+    .sij-sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+    }
+}
+
+.sij-sidebar .offcanvas-body {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 1rem;
+    height: 100%;
+}
+
+.sij-emblema {
+    display: block;
+    background: #f7f3e6;
+    color: #3b3b35;
+    border-radius: .5rem;
+    font-size: .75rem;
+    font-weight: 600;
+    text-align: center;
+    padding: .9rem .5rem;
+    text-decoration: none;
+}
+
+.sij-emblema:hover {
+    color: #3b3b35;
+}
+
+.sij-linea-dorada {
+    width: 2rem;
+    height: 3px;
+    background: var(--sij-acento);
+    margin: 1rem 0 .75rem;
+}
+
+.sij-institucion {
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.sij-subtitulo-dorado {
+    color: var(--sij-acento);
+    font-size: .72rem;
+}
+
+.sij-etiqueta-menu {
+    font-size: .68rem;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: #a9b7ad;
+    margin: 1.5rem 0 .5rem;
+}
+
+.sij-menu .nav-link {
+    color: #e9eee9;
+    border-radius: .4rem;
+    padding: .55rem .75rem;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.sij-menu .nav-link:hover,
+.sij-menu .nav-link:focus-visible {
+    background: var(--sij-primario-hover);
+    color: #fff;
+}
+
+.sij-menu .nav-link.active {
+    background: var(--sij-primario-hover);
+    border-left: 3px solid var(--sij-acento);
+}
+
+.sij-menu .nav-link.disabled {
+    color: #9fb0a5;
+}
+
+.sij-usuario {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    font-size: .8rem;
+}
+
+.sij-avatar {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: #f7f3e6;
+    color: var(--sij-primario);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.sij-btn-salir {
+    border: 1px solid var(--sij-acento);
+    color: #e9eee9;
+}
+
+.sij-contenido {
+    flex-grow: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sij-topbar {
+    background: #fff;
+    border-bottom: 1px solid var(--sij-borde);
+    padding: .9rem 1.5rem;
+    color: var(--sij-texto-suave);
+    font-size: .85rem;
+}
+
+.sij-main {
+    padding: 1.25rem 1.5rem 2rem;
+    flex-grow: 1;
+}
+
+.sij-pie {
+    font-size: .75rem;
+    color: var(--sij-texto-suave);
+    padding: 0 1.5rem 1.25rem;
+}
+
+/* Layout público (portal de Copias y páginas de error): sin menú lateral */
+.sij-topbar-publico {
+    background: var(--sij-primario);
+    color: #fff;
+    padding: .9rem 1.5rem;
+    border-bottom: 3px solid var(--sij-acento);
+}
+
+.sij-main-publico {
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 2rem;
+    flex-grow: 1;
+}
+
+/* ===================== Encabezado de página ===================== */
+.sij-migas {
+    font-size: .78rem;
+    color: var(--sij-texto-suave);
+}
+
+.sij-migas a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.sij-migas a:hover {
+    text-decoration: underline;
+}
+
+.sij-titulo {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 1rem 0 .2rem;
+}
+
+.sij-descripcion {
+    color: var(--sij-texto-suave);
+    font-size: .85rem;
+}
+
+/* ===================== Botones ===================== */
+.btn-primary {
+    --bs-btn-bg: var(--sij-primario);
+    --bs-btn-border-color: var(--sij-primario);
+    --bs-btn-hover-bg: var(--sij-primario-hover);
+    --bs-btn-hover-border-color: var(--sij-primario-hover);
+    --bs-btn-active-bg: var(--sij-primario-hover);
+    --bs-btn-active-border-color: var(--sij-primario-hover);
+    --bs-btn-disabled-bg: var(--sij-primario);
+    --bs-btn-disabled-border-color: var(--sij-primario);
+    --bs-btn-focus-shadow-rgb: 31, 58, 44;
+}
+
+/* Botón secundario sobre fondo crema */
+.btn-sij-secundario {
+    --bs-btn-bg: #fff;
+    --bs-btn-border-color: var(--sij-borde);
+    --bs-btn-color: var(--sij-texto);
+    --bs-btn-hover-bg: var(--sij-primario-claro);
+    --bs-btn-hover-border-color: var(--sij-borde);
+    --bs-btn-hover-color: var(--sij-texto);
+    --bs-btn-active-bg: var(--sij-primario-claro);
+    --bs-btn-active-border-color: var(--sij-borde);
+}
+
+/* ===================== Tarjetas, tablas y textos ===================== */
+.sij-tarjeta {
+    background: #fff;
+    border: 1px solid var(--sij-borde);
+    border-radius: .6rem;
+}
+
+.sij-tarjeta-titulo {
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+a.sij-tarjeta {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    transition: border-color .15s, box-shadow .15s;
+}
+
+a.sij-tarjeta:hover,
+a.sij-tarjeta:focus-visible {
+    border-color: var(--sij-acento);
+    box-shadow: 0 .25rem .75rem rgba(31, 58, 44, .08);
+}
+
+.sij-tabla thead th {
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--sij-texto-suave);
+    font-weight: 600;
+    background: #faf9f5;
+}
+
+.sij-tabla td {
+    padding-top: .85rem;
+    padding-bottom: .85rem;
+}
+
+.sij-texto-chico {
+    font-size: .75rem;
+    color: var(--sij-texto-suave);
+}
+
+/* Contadores: "16 Registrados" */
+.sij-contador {
+    background: #fff;
+    border: 1px solid var(--sij-borde);
+    border-radius: .35rem;
+    font-size: .75rem;
+    font-weight: 600;
+    padding: .2rem .55rem;
+}
+
+/* ===================== Estado con punto de color (<n:estado>) ===================== */
+.sij-estado {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    background: #f4efdf;
+    border-radius: .3rem;
+    font-size: .75rem;
+    font-weight: 600;
+    padding: .15rem .5rem;
+    white-space: nowrap;
+}
+
+.sij-estado::before {
+    content: "";
+    width: .45rem;
+    height: .45rem;
+    border-radius: 50%;
+    background: #2e7d4f;
+}
+
+.sij-estado-verde::before { background: #2e7d4f; }
+.sij-estado-ambar::before { background: #d08a2c; }
+.sij-estado-gris::before { background: #8a8a80; }
+.sij-estado-rojo::before { background: #b3412f; }
+.sij-estado-azul::before { background: #2f6db3; }
+
+/* ===================== Avisos ===================== */
+.sij-aviso {
+    background: #fff;
+    border: 1px solid var(--sij-borde);
+    border-radius: .6rem;
+    font-size: .85rem;
+}
+
+.sij-aviso-advertencia {
+    background: #fdf6ea;
+    border-color: #e0b56a;
+}
+
+/* ===================== Formularios y paginación ===================== */
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+    border-color: #7f9a88;
+    box-shadow: 0 0 0 .2rem rgba(31, 58, 44, .15);
+}
+
+.form-check-input:checked {
+    background-color: var(--sij-primario);
+    border-color: var(--sij-primario);
+}
+
+.form-control[readonly] {
+    background: #f3f2ee;
+}
+
+.pagination {
+    --bs-pagination-color: var(--sij-primario);
+    --bs-pagination-hover-color: var(--sij-primario);
+    --bs-pagination-active-bg: var(--sij-primario);
+    --bs-pagination-active-border-color: var(--sij-primario);
+    --bs-pagination-focus-box-shadow: 0 0 0 .2rem rgba(31, 58, 44, .15);
+}
