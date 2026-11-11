@@ -1,0 +1,234 @@
+/*
+ * Estilos propios de Copias Certificadas (EQUIPO 5). Clases con prefijo "cop-".
+ * Se carga con <cop:estilos/> (WEB-INF/tags/copias/estilos.tag), que después escribe los colores del área.
+ *
+ * Colores del área (los cambia COPIAS_ADMIN en /copias/admin/colores):
+ *   --sij-primario  menú lateral (variable del núcleo, solo se reemplaza en estas pantallas)
+ *   --sij-acento    detalles dorados (núcleo)
+ *   --sij-borde     bordes (núcleo)
+ *   --cop-titulos   títulos
+ *   --cop-boton     botones principales
+ *   --cop-aviso     avisos
+ * Los tonos "hover" y claros se calculan a partir de ellos.
+ */
+:root {
+    --sij-primario: #35483B;
+    --sij-acento: #B49A5A;
+    --sij-borde: #B8B0A1;
+    --cop-titulos: #76513D;
+    --cop-boton: #651747;
+    --cop-aviso: #D8C39A;
+
+    --sij-primario-hover: color-mix(in srgb, var(--sij-primario) 82%, white);
+    --sij-primario-claro: color-mix(in srgb, var(--sij-primario) 10%, white);
+    --sij-fondo: #F7F3EA;
+    --cop-boton-hover: color-mix(in srgb, var(--cop-boton) 82%, black);
+}
+
+/* Títulos */
+.sij-titulo,
+.sij-tarjeta-titulo {
+    color: var(--cop-titulos);
+}
+
+/* Botón principal con el color del área */
+.btn-primary {
+    --bs-btn-bg: var(--cop-boton);
+    --bs-btn-border-color: var(--cop-boton);
+    --bs-btn-hover-bg: var(--cop-boton-hover);
+    --bs-btn-hover-border-color: var(--cop-boton-hover);
+    --bs-btn-active-bg: var(--cop-boton-hover);
+    --bs-btn-active-border-color: var(--cop-boton-hover);
+    --bs-btn-disabled-bg: var(--cop-boton);
+    --bs-btn-disabled-border-color: var(--cop-boton);
+}
+
+/* Enlaces del contenido (Bootstrap usa un color fijo en RGB) */
+.sij-main a:not(.btn):not(.page-link):not(.nav-link) {
+    color: var(--sij-primario);
+}
+
+.page-item.active .page-link {
+    background-color: var(--sij-primario);
+    border-color: var(--sij-primario);
+}
+
+/* Aviso con el color de avisos del área */
+.cop-aviso {
+    background: color-mix(in srgb, var(--cop-aviso) 30%, white);
+    border: 1px solid var(--cop-aviso);
+    border-radius: .5rem;
+    padding: .75rem 1rem;
+    color: #55402f;
+}
+
+/* Tarjetas del inicio con un número grande */
+.cop-indicador {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+}
+
+.cop-indicador:hover {
+    border-color: var(--sij-acento);
+}
+
+.cop-indicador .cop-numero {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--cop-titulos);
+    line-height: 1.1;
+}
+
+/* Renglones etiqueta / valor (detalle y comprobante) */
+.cop-dato {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .45rem 0;
+    border-bottom: 1px solid var(--sij-borde);
+}
+
+.cop-dato:last-child {
+    border-bottom: 0;
+}
+
+.cop-dato > span:first-child {
+    color: var(--sij-texto-suave);
+}
+
+.cop-dato > strong {
+    text-align: right;
+}
+
+/* Expediente encontrado en la captura */
+.cop-expediente {
+    border-left: 4px solid var(--sij-acento);
+}
+
+/* Historial de estados */
+.cop-historial {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.cop-historial li {
+    position: relative;
+    padding: 0 0 .9rem 1.25rem;
+    border-left: 2px solid var(--sij-borde);
+    margin-left: .35rem;
+}
+
+.cop-historial li:last-child {
+    padding-bottom: 0;
+}
+
+.cop-historial li::before {
+    content: "";
+    position: absolute;
+    left: -6px;
+    top: .3rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--sij-acento);
+}
+
+/* Vista previa de la INE (solo en la validación) */
+.cop-ine {
+    width: 100%;
+    max-height: 420px;
+    object-fit: contain;
+    border: 1px solid var(--sij-borde);
+    border-radius: .5rem;
+    background: #fff;
+}
+
+.cop-ine-pdf {
+    width: 100%;
+    height: 420px;
+    border: 1px solid var(--sij-borde);
+    border-radius: .5rem;
+}
+
+/* Parte del expediente que coincide con el RFC del solicitante */
+.cop-coincide {
+    background: color-mix(in srgb, var(--cop-aviso) 30%, white);
+}
+
+/* Muestra de color en la administración */
+.cop-muestra {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: .5rem;
+    border: 1px solid var(--sij-borde);
+    flex-shrink: 0;
+}
+
+.form-control-color {
+    width: 3.5rem;
+}
+
+/* TEMPORAL: selector "Modo de prueba" del menú (se borra con el inicio de sesión del núcleo) */
+.cop-modo-prueba {
+    padding: 0 .75rem;
+}
+
+.cop-modo-opcion {
+    flex: 1;
+    color: rgba(255, 255, 255, .8);
+    border: 1px solid rgba(255, 255, 255, .35);
+    background: transparent;
+}
+
+.cop-modo-opcion:hover {
+    color: #fff;
+    border-color: var(--sij-acento);
+}
+
+.cop-modo-activo,
+.cop-modo-activo:hover {
+    color: var(--sij-primario);
+    background: var(--sij-acento);
+    border-color: var(--sij-acento);
+    font-weight: 600;
+}
+
+/* Comprobante: al imprimir solo sale el comprobante */
+.cop-comprobante {
+    max-width: 720px;
+}
+
+.cop-comprobante-encabezado {
+    border-bottom: 3px solid var(--sij-acento);
+}
+
+@media print {
+    .sij-sidebar,
+    .sij-topbar,
+    .sij-pie,
+    .sij-migas,
+    .toast-container,
+    .alert,
+    .cop-no-imprimir {
+        display: none !important;
+    }
+
+    body.sij-body,
+    .sij-main {
+        background: #fff !important;
+        padding: 0 !important;
+    }
+
+    .sij-contenido {
+        margin: 0 !important;
+    }
+
+    .cop-comprobante {
+        max-width: none;
+        border: 0 !important;
+        box-shadow: none !important;
+    }
+}
